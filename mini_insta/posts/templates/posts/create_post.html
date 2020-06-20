@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+    <form method='POST' enctype='multipart/form-data'>
+        {% csrf_token %}
+        <br/>
+        <div class="form-group">
+            <label for="id_image"><strong>Chose image to publicate:</strong></label>
+            <input type="file" class="form-control-file" accept='image/*' id="id_image" required name="image">   
+        </div>
+        <div class="form-group">
+            <label for="id_caption">Your caption to image</label>
+            <textarea class="form-control" id="id_caption" rows="3" name="caption"></textarea>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="add post" name="create_post">
+    </form>
+
+{% endblock %}
