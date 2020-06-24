@@ -20,4 +20,3 @@ def create_post(request):
 
     }
     return render(request, 'posts/create_post.html', context)
-Good luck 
