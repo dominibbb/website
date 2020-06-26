@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block conntent %}
+<h4>Are you sure you wont delete this group?</h4>
+
+<div class="card text-center" style="width: 18rem;">
+    <form method="POST">
+        {% csrf_token %}
+        <h2>{{ object.name_of_group }}</h2>
+
+        <input type="submit" class="btn btn-danger" value="delete">
+        </div>
+
+    </form>
+</div>
+
+
+
+{% endblock %}

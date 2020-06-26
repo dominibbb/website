@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+<form method="POST" class="form-group">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Name of group</label>
+        <p>{{form.name_of_group}}</p>
+        <label>description</label>
+        <p>{{form.description_of_group}}</p>
+    </div>
+    
+    
+
+    <input type="submit" name="update">
+</form>
+
+<!-- <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_name_of_group">Name of group</label>
+        {{form.name_of_group}}
+    </div>
+    <div class="form-group">
+        <label for="id_description_of_group">description</label>
+        <textarea class="form-control" id="id_description_of_group" rows="3"></textarea>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="update" name="create_group">
+</form> -->
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+{% for group in object_list %}
+    <div class="container card">
+        <h2>{{ group.name_of_group }}</h2>
+        <p>{{ group.description_of_group }}</p>
+        <p>{{ group.members }}</p>
+        <p>{{ group.posts_in_group }}</p>
+        <a href="{% url 'groups:detail' group.pk %}">Detail</a>
+    </div>
+{% endfor%}
+
+{% endblock %}

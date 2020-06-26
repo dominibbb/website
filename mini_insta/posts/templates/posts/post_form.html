@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <p>{{form.image}}</p>
+        <label>caption</label>
+        <p>{{form.caption}}</p>
+    </div>
+    <input type="submit" value="update">
+</form>
+
+{% endblock %}

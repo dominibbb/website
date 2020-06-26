@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+
+<div class="card text-center" style="width: 30rem;">
+    <div class="card-body">
+        <h2>{{ object.name_of_group }}</h2>
+        <p>{{ object.description_of_group }}</p>
+        <p>{{ object.members }}</p>
+        <p>{{ object.posts_in_group }}</p>
+        <a href="{% url 'groups:delete' group.pk %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'groups:update' group.pk %}" class="btn btn-primary">Update</a>
+</div>
+
+    
+</div>
+
+{% endblock %}

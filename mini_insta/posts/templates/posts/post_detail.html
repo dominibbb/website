@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+
+
+<div class="container">
+    <div class="card text-center" style="width: 30rem;">
+        <img src="{{object.image.url}}" class="card-img-top" alt="Card image cap">
+        <div class="card-body">
+            <p class="card-text">{{ object.caption }}</p>
+            <p>Author: {{ object.author }}</p>
+            <p>Date of create: {{ object.date_of_publication }}</p>
+            <a href="{% url 'posts:delete' post.pk %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'posts:update' post.pk %}" class="btn btn-primary">Update</a>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

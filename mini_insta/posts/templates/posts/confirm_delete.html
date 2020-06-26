@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block conntent %}
+<h4>Are you sure you wont delete this post?</h4>
+
+<div class="card text-center" style="width: 30rem;">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="container">
+
+            <img src="{{object.image.url}}" class="card-img-top" alt="Card image cap">
+            <p class="card-text">{{ object.caption }}</p>
+            <input type="submit" class="btn btn-danger container" value="delete">
+        </div>
+
+    </form>
+</div>
+
+
+
+{% endblock %}

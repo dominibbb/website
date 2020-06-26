@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from .models import Post
+from django.views.generic import (ListView, DetailView, DeleteView, UpdateView)
+from django.urls import reverse_lazy, reverse
+
+
+from django.http import Http404
 
 # Create your views here.
 @login_required 
@@ -14,32 +19,85 @@ def create_post(request):
 
             Post.objects.create(author=user, caption=caption, image=image)
 
-            return redirect('home')
+            return redirect('posts:list')
 
     context = {
-
+        
     }
     return render(request, 'posts/create_post.html', context)
 
-@login_required
-def list_view(request):
-    posts = Post.objects.all()
-    if not posts:
-        context = {}
-    else:
-        context = {
-            'posts':posts
-        }
+
+class PostListView(ListView):
+
+    model = Post
+    reverse_lazy('about')
+
+class PostDetailView(DetailView):
+
+    model = Post
+
+class PostDeleteView(DeleteView):
+
+    model = Post
+    template_name = 'posts/confirm_delete.html'
+
+    success_url = reverse_lazy('posts:list')
+
+
+
+    def get_queryset(self):
+        user = self.request.user
+        return Post.objects.filter(author=user)
+
+    # def get_queryset(self):
+    #     qs = super(PostDeleteView, self).get_queryset()
+    #     return qs.filter(author=self.request.user)
+
+
+class PostUpdateView(UpdateView):
+
+    model = Post
+
+    fields = ['image', 'caption']
+
+    success_message = "Updated Successfully" 
+
+    success_url = reverse_lazy('posts:list')
+
+
+# @login_required
+# def list_view(request):
+#     posts = Post.objects.all()
+#     if not posts:
+#         context = {}
+#     else:
+#         context = {
+#             'posts':posts
+#         }
     
-    return render(request, 'posts/list_view.html', context)
+#     return render(request, 'posts/list_view.html', context)
 
-@login_required
-def delete_post(request, post_pk):
-    if request.user == Posts.objects.get(pk=post_pk).author:
-        if request.method == 'POST':
-            Posts.objects.get(pk=post_pk).delete()
+# @login_required
+# def detail_view(request,post_id):
+#     post = Posts.objects.get(id=post_id)
+#     image = post.image
+#     caption = post.caption
+#     author = post.author
+#     date = post.date_of_publicaton
 
-    return render(request, 'post_detail')
+#     context = {
+#         # 'image' = image, 'caption' = caption, 'author' = author, 'date' = date
+#     }
+
+#     return render(request,  'posts/post_detail.html',context)
+
+# @login_required
+# def delete_post(request, post_id):
+#     if request.user == Posts.objects.get(id=post_id).author:
+#         if request.method == 'POST':
+#             Posts.objects.get(pk=post_pk).delete()
+
+#     return render(request, 'post_detail')
 
 
 
