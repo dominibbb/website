@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block conntent %}
+<div cllas="container">
+    <h1>Create group:</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" id='id_name_of_group' required name="name_of_group">
+        <textarea cllas="" name="description_of_group" id="id_description_of_group" cols="30" rows="10"></textarea>
+        <input type="submit" cllas="" value="Create" name="create_group">
+    </form>
+</div>
+
+
+{% endblock %}

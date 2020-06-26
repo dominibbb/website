@@ -6,5 +6,4 @@ from .models import Group
 class GroupForm(ModelForm):
     class Meta:
         model = Group
-        fileds = ['user', 'name_of_group', 'description_of_group']
-        exclude = ['user']
+        fields = [ 'name_of_group', 'description_of_group']
