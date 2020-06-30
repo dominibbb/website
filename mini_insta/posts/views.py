@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from .models import Post
-from django.views.generic import (ListView, DetailView, DeleteView, UpdateView)
+from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import render, redirect
+from django.views.generic.edit import FormMixin
 
-
-from django.http import Http404
+from .forms import CommentForm, AddCommentForm
+from .models import Post
 
 # Create your views here.
 @login_required 
@@ -22,8 +22,8 @@ def create_post(request):
             return redirect('posts:list')
 
     context = {
-        
-    }
+
+  }
     return render(request, 'posts/create_post.html', context)
 
 
@@ -32,9 +32,35 @@ class PostListView(ListView):
     model = Post
     reverse_lazy('about')
 
-class PostDetailView(DetailView):
-
+class PostDetailView(FormMixin, DetailView):
     model = Post
+    form_class = CommentForm
+    template_name = 'posts/post_detail.html'
+
+    def get_success_url(self):
+        return reverse('posts:detail', kwargs={'pk':self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(PostDetailView, self).get_context_data(**kwargs)
+        context['form'] = self.get_form()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.comment_author = 
+        form.post = 
+        return super(PostDetailView, self).form_valid(form)
+
+
 
 class PostDeleteView(DeleteView):
 
@@ -49,9 +75,6 @@ class PostDeleteView(DeleteView):
         user = self.request.user
         return Post.objects.filter(author=user)
 
-    # def get_queryset(self):
-    #     qs = super(PostDeleteView, self).get_queryset()
-    #     return qs.filter(author=self.request.user)
 
 
 class PostUpdateView(UpdateView):
@@ -113,3 +136,18 @@ class PostUpdateView(UpdateView):
 #         else:
 #             form = PostForm()
 #     return render(request, 'posts/create_post.html', {'form':form})
+
+
+def add_comment(request):
+
+    if request.method == 'POST':
+        form = AddCommentForm(request.POST)
+        if form.is_valid():
+            form.comment_author = request.user
+            form.save()
+            return HttpResponseRedirect('/about/')
+
+    else:
+        form = AddCommentForm()
+
+    return render(request, 'posts/form_comment.html', {'form':form})

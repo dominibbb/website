@@ -8,5 +8,5 @@ urlpatterns = [
     path('list/', views.GroupListView.as_view(), name='list'),
     path('detail/<int:pk>/', views.GroupDetailView.as_view(), name='detail'),
     path('delete/<int:pk>/', views.GroupDeleteView.as_view(), name='delete'),
-    path('update/<int:pk>/', views.GroupUpdateView.as_view(), name='update')
+    path('update/<int:pk>/', views.GroupUpdateView.as_view(), name='update'),
 ]

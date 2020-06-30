@@ -15,3 +15,6 @@ class Group(models.Model):
 
     def get_absolute_url(self):
         return reverse('groups:detail', kwargs={'pk':self.pk})        
+
+    def __str__(self):
+        return self.name_of_group
