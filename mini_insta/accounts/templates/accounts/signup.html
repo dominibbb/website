@@ -1,10 +1,29 @@
 {% extends 'base.html' %}
 {% block conntent %}
 
-<form method="POST">
+<form method="POST" name="signup">
     {% csrf_token %}
     {{ form.as_p}}
-    <input type="submit" value="Sign Up">
+
+    <div class="form-group">
+        <label for="id_username">Email address</label>
+        <input type="email" class="form-control" id="id_username" aria-describedby="emailHelp" name="username">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="id_email">Email address</label>
+        <input type="email" class="form-control" id="id_email" aria-describedby="emailHelp" name="username">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+      </div>
+    <div class="form-group">
+        <label for="id_password">Password</label>
+        <input type="password" class="form-control" id="id_password" name="password">
+    </div>
+    <div class="form-group">
+        <label for="id_password_2">Repeat password</label>
+        <input type="password" class="form-control" id="id_password_2" name="password">
+    </div>
+    <input type="submit" value="Sign up" name="signup">
 </form>
 
 {% endblock %}

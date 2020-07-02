@@ -33,15 +33,19 @@
               </ul>
 
             <!-- FORM FOR COMMENTS -->
-            <form method="POST">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_body">Add new comment</label>
-                    <textarea class="form-control" name="body" id="id_body" cols="30" rows="5"></textarea>
-                    <input type="submit" class="btn btn-primary" value="add comment" name="add comment">
-                </div>
-            </form>
-
+            {% if user.is_authenticated %}
+                <form method="POST" name="PostDetailView">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_body">Add new comment</label>
+                        <textarea class="form-control" name="body" id="id_body" cols="30" rows="5"></textarea>
+                        <input type="submit" class="btn btn-primary" value="add comment" name="PostDetailView">
+                    </div>
+                </form>
+            {% else %}
+                <p>If you want to add a comment you have to be log in</p>
+                <a href="{% url 'accounts:login' %}"><button class="btn btn-primary">Log In</button></a>
+            {% endif %}
         </div>
     </div>
 </div>

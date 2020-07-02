@@ -41,8 +41,8 @@ from django.contrib.auth.forms import AuthenticationForm
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request.POST)
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
 
         if user is not None:

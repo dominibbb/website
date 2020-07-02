@@ -19,7 +19,13 @@ class PostDetailView(FormMixin, DetailView):
     template_name = 'posts/post_detail.html'
 
     def get_success_url(self):
-        return reverse('posts:detail', kwargs={'pk':self.object.pk})
+        # maybe you can help me with this latter 
+        # there was issue too, can't finde the pk
+        # this was original
+        # return reverse('posts:detail', kwargs={'pk':self.object.pk})
+
+        # for now i repalce this code for reverse without pk
+        return reverse('posts:list')
 
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)

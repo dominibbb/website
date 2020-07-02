@@ -1,15 +1,27 @@
 {% extends 'base.html' %}
 {% block conntent %}
-
-<form method="POST">
+<div class="container">
+    <h2>Log in </h2>
+    <form method="POST" name="login_view">   
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_username">User name</label>
+            <input type="text" class="form-control" id="id_username" name="username">
+          </div>
+          <div class="form-group">
+            <label for="id_password">Password</label>
+            <input type="password" class="form-control" id="id_password" name="password">
+        </div>
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+        <br/>
+        <input type="submit" value="Log in" name="login_view">
+    </form>
+    <br>
+    <h5>If you don't have account <a href="{% url 'accounts:signup' %}">Sign up</a></h5>
     
-    {% csrf_token %}
-    {{ form.as_p }}
-    {% for message in messages %}
-    {{ message }}
-    {% endfor %}
-    <br/>
-    <input type="submit" value="Log in">
-</form>
+</div>
+
 
 {% endblock %}
