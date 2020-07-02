@@ -5,32 +5,13 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import FormMixin
 
-from .forms import CommentForm, AddCommentForm
+from .forms import CommentForm
 from .models import Post
 
-# Create your views here.
-@login_required 
-def create_post(request):
-    if request.POST:
-        if 'create_post' in request.POST:
-            caption = request.POST.get('caption')
-            image = request.FILES.get('image')
-            user = request.user
-
-            Post.objects.create(author=user, caption=caption, image=image)
-
-            return redirect('posts:list')
-
-    context = {
-
-  }
-    return render(request, 'posts/create_post.html', context)
-
-
-class PostListView(ListView):
-
-    model = Post
-    reverse_lazy('about')
+# HELP ME WITH THIS 
+# This view is working but adding comment is not working
+# the form displayed but i can't create comment 
+# i can only create comment in admin page
 
 class PostDetailView(FormMixin, DetailView):
     model = Post
@@ -56,9 +37,37 @@ class PostDetailView(FormMixin, DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        form.comment_author = 
-        form.post = 
+        self.object = form.save(commit = False)
+        self.object.comment_author = self.request.user
+        self.object.post = self.get_object()
         return super(PostDetailView, self).form_valid(form)
+
+
+
+
+@login_required 
+def create_post(request):
+    if request.POST:
+        if 'create_post' in request.POST:
+            caption = request.POST.get('caption')
+            image = request.FILES.get('image')
+            user = request.user
+
+            Post.objects.create(author=user, caption=caption, image=image)
+
+            return redirect('posts:list')
+
+    context = {
+
+  }
+    return render(request, 'posts/create_post.html', context)
+
+
+class PostListView(ListView):
+
+    model = Post
+    reverse_lazy('about')
+
 
 
 
@@ -86,68 +95,3 @@ class PostUpdateView(UpdateView):
     success_message = "Updated Successfully" 
 
     success_url = reverse_lazy('posts:list')
-
-
-# @login_required
-# def list_view(request):
-#     posts = Post.objects.all()
-#     if not posts:
-#         context = {}
-#     else:
-#         context = {
-#             'posts':posts
-#         }
-    
-#     return render(request, 'posts/list_view.html', context)
-
-# @login_required
-# def detail_view(request,post_id):
-#     post = Posts.objects.get(id=post_id)
-#     image = post.image
-#     caption = post.caption
-#     author = post.author
-#     date = post.date_of_publicaton
-
-#     context = {
-#         # 'image' = image, 'caption' = caption, 'author' = author, 'date' = date
-#     }
-
-#     return render(request,  'posts/post_detail.html',context)
-
-# @login_required
-# def delete_post(request, post_id):
-#     if request.user == Posts.objects.get(id=post_id).author:
-#         if request.method == 'POST':
-#             Posts.objects.get(pk=post_pk).delete()
-
-#     return render(request, 'post_detail')
-
-
-
-# def create_post(request):
-#     if request.user.is_authenticated:
-#         if request.method == 'POST':
-#             form = PostForm(request.POST)
-#             if form.is_valid():
-#                 form.save(commit=False)
-#                 form.user = request.user
-#                 form.save()
-#                 return HttpResponseRedirect('/about/')
-#         else:
-#             form = PostForm()
-#     return render(request, 'posts/create_post.html', {'form':form})
-
-
-def add_comment(request):
-
-    if request.method == 'POST':
-        form = AddCommentForm(request.POST)
-        if form.is_valid():
-            form.comment_author = request.user
-            form.save()
-            return HttpResponseRedirect('/about/')
-
-    else:
-        form = AddCommentForm()
-
-    return render(request, 'posts/form_comment.html', {'form':form})

@@ -1,38 +1,50 @@
 {% extends 'base.html' %}
 {% block conntent %}
 
-
+<!-- This is my template for PostDetailView  -->
 
 <div class="container">
     <div class="card text-center" style="width: 30rem;">
         <img src="{{object.image.url}}" class="card-img-top" alt="Card image cap">
         <div class="card-body">
+
+            <!-- POST -->
             <p class="card-text">{{ object.caption }}</p>
             <p>Author: {{ object.author }}</p>
             <p>Date of create: {{ object.date_of_publication }}</p>
-            <a href="{% url 'posts:delete' post.pk %}" class="btn btn-danger">Delete</a>
-            <a href="{% url 'posts:update' post.pk %}" class="btn btn-primary">Update</a>
-            <p></p>
-            {% for comment in object.comments.all %}
-                <p>Comment by:<strong>{{ comment.comment_author }}</strong></p>
-                <p>Comment: {{ comment.body }}</p>
-                
-                
-            {% endfor %}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a href="{% url 'posts:delete' post.pk %}" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'posts:update' post.pk %}" class="btn btn-primary">Update</a>
+                </li>
 
+                <!-- COMMENTS -->
+                <h4>Comments for this photo:</h4>
+                {% for comment in object.comments.all %}
+                    <li class="list-group-item">
+                        <p>Comment by:<strong>{{ comment.comment_author }}</strong></p>
+                        <p><strong>Comment: </strong> {{ comment.body }}</p>
+                    </li>
+                {% empty %}
+                    <li>
+                        <p>No comments</p>
+                    </li>     
+                {% endfor %}
+              </ul>
 
-
+            <!-- FORM FOR COMMENTS -->
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="id_body">Add new comment</label>
                     <textarea class="form-control" name="body" id="id_body" cols="30" rows="5"></textarea>
-                <input type="submit" class="btn btn-primary" value="add comment" name="add comment">
+                    <input type="submit" class="btn btn-primary" value="add comment" name="add comment">
                 </div>
-                
             </form>
 
         </div>
     </div>
 </div>
+
+
 {% endblock %}
