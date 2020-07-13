@@ -1,53 +1,55 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView, TemplateView
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import FormMixin
 
 from .forms import CommentForm
-from .models import Post
+from .models import Post, Like
 
-# HELP ME WITH THIS 
-# This view is working but adding comment is not working
-# the form displayed but i can't create comment 
-# i can only create comment in admin page
+def detail_view(request, pk):
+    post = Post.objects.get(pk=pk)
+    image = post.image
+    caption = post.caption
+    author = post.author
+    date = post.date_of_publication
 
-class PostDetailView(FormMixin, DetailView):
-    model = Post
-    form_class = CommentForm
-    template_name = 'posts/post_detail.html'
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if 'create_comment' in request.POST:
 
-    def get_success_url(self):
-        # maybe you can help me with this latter 
-        # there was issue too, can't finde the pk
-        # this was original
-        # return reverse('posts:detail', kwargs={'pk':self.object.pk})
+            if comment_form.is_valid():
+                comment_form = comment_form.save(commit=False)
+                comment_form.comment_author = request.user
+                comment_form.post = post
+                comment_form.body = request.POST.get('body')
+                comment_form.save()
+                return redirect('posts:detail', pk=pk)
+        elif 'like' in request.POST:
+            try:
+                if Like.objects.get(post=post, like_author=request.user) in Like.objects.all():
+                    Like.objects.get(post=post, like_author=request.user).delete()
+                    user_like = 'like'
+                    return redirect('posts:detail', pk=pk)
+                else:
+                    Like.objects.create(like_author=request.user, post=post)
+                    user_like = 'dislike'
+                    return redirect('posts:detail', pk=pk)                                        
+            except:
+                Like.objects.create(like_author=request.user, post=post)
+                user_like = 'dislike'
+                return redirect('posts:detail', pk=pk)       
 
-        # for now i repalce this code for reverse without pk
-        return reverse('posts:list')
+    else:
+        comment_form = CommentForm()
 
-    def get_context_data(self, **kwargs):
-        context = super(PostDetailView, self).get_context_data(**kwargs)
-        context['form'] = self.get_form()
-        return context
 
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return HttpResponseForbidden()
-        self.object = self.get_object()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    context = {
+        'post':post, 'image':image, 'caption':caption, 'author':request.user, 'date':date,
+    }
 
-    def form_valid(self, form):
-        self.object = form.save(commit = False)
-        self.object.comment_author = self.request.user
-        self.object.post = self.get_object()
-        return super(PostDetailView, self).form_valid(form)
-
+    return render(request,  'posts/detail.html',context)
 
 
 
@@ -88,7 +90,7 @@ class PostDeleteView(DeleteView):
 
     def get_queryset(self):
         user = self.request.user
-        return Post.objects.filter(author=user)
+        return Post.objects.get(author=user)
 
 
 

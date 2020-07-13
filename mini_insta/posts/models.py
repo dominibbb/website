@@ -21,6 +21,11 @@ class Post(models.Model):
     def __str__(self):
         return 'Author of post %s' % (self.author)
 
+class Like(models.Model):
+    post = models.ForeignKey(Post, related_name='like', on_delete=models.CASCADE)
+    like_author = models.OneToOneField(User, related_name='like_author', on_delete=models.CASCADE)
+
+
 class Comment(models.Model):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     comment_author = models.ForeignKey(User, on_delete=models.CASCADE)

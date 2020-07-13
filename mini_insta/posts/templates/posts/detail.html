@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+
+<div class="container jumbotron">
+    <h1>{{like}}</h1>
+    <img src="{{ image.url }}" alt="">
+    <p>{{ caption }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        Likes: {{ post.like.all.count }}
+        <input type="submit" value="{{ like }}" class=" btn btn-primary" name="like">
+    </form>
+
+
+    <h4>Comments for this photo:</h4>
+    {% for comment in post.comments.all %}
+        <li class="list-group-item">
+            <p>Comment by:<strong>{{ comment.comment_author }}</strong></p>
+            <p><strong>Comment: </strong> {{ comment.body }}</p>
+        </li>
+    {% empty %}
+        <li>
+            <p>No comments</p>
+        </li>     
+    {% endfor %}
+    </ul>
+
+    <form method="POST">
+        {% csrf_token %}
+        <!-- {{ comment_form.as_p }} -->
+        <label for="id_body">Add new comment</label>
+        <textarea class="form-control" name="body" id="id_body" cols="30" rows="5"></textarea>
+        <input type="submit" value="add" class="btn btn-primary" name="create_comment">
+    </form>
+
+</div>
+
+
+
+
+
+{% endblock %}
