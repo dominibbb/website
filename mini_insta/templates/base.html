@@ -13,14 +13,14 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #42647a;">
-        <!-- <a class="navbar-brand" href="#">
-          <img src="/home/dominika/folders/projects/website/mini_insta/media/icon1.png" alt="">
-        </a> -->
+        <a class="navbar-brand" href="#">
+          <img src="/home/dominika/folders/projects/website/mini_insta/media/icon.png" alt="">
+        </a>
       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{% url 'home' %}">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'posts:list' %}">Posts</a>
@@ -34,6 +34,7 @@
               <a href="{% url 'accounts:logout' %}" class="btn btn-outline-dark">Log Out</a>
             {% else %}
               <a href="{% url 'accounts:login' %}" class="btn btn-outline-dark">Log In</a>
+              <a href="{% url 'accounts:signup' %}" class="btn btn-outline-dark">Sign Up</a>
             {% endif %}
             </form>
         </div>

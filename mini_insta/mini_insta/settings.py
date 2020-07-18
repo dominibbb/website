@@ -141,3 +141,8 @@ LOGIN_URL = reverse_lazy('accounts:login')
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'youremail@gmail.com'
+EMAIL_HOST_PASSWORD = 'yourpassword'
+EMAIL_PORT = 587

@@ -3,25 +3,29 @@
 
 <form method="POST" name="signup">
     {% csrf_token %}
-    {{ form.as_p}}
+
 
     <div class="form-group">
-        <label for="id_username">Email address</label>
-        <input type="email" class="form-control" id="id_username" aria-describedby="emailHelp" name="username">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <label for="id_username">Username</label>
+        <input type="text" class="form-control" id="id_username" aria-describedby="emailHelp" name="username">
+        <div class='error'>{{form.errors.username}}</div>
+        <small id="id_username" class="form-text text-muted">Username have to be unique</small>
     </div>
     <div class="form-group">
         <label for="id_email">Email address</label>
-        <input type="email" class="form-control" id="id_email" aria-describedby="emailHelp" name="username">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <input type="email" class="form-control" id="id_email" aria-describedby="emailHelp" name="email">
+        <div class='error'>{{form.errors.email}}</div>
+        <small id="id_email" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
     <div class="form-group">
         <label for="id_password">Password</label>
-        <input type="password" class="form-control" id="id_password" name="password">
+        <input type="password" class="form-control" id="id_password" name="password1">
+        <div class='error'>{{form.errors.password1}}</div>
     </div>
     <div class="form-group">
         <label for="id_password_2">Repeat password</label>
-        <input type="password" class="form-control" id="id_password_2" name="password">
+        <input type="password" class="form-control" id="id_password_2" name="password2">
+        <div class='error'>{{form.errors.password2}}</div>
     </div>
     <input type="submit" value="Sign up" name="signup">
 </form>
