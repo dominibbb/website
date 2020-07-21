@@ -1,8 +1,9 @@
-<form mathod="POST">
+<form method="POST">
     {% csrf_token %}
-    {% for field in form %}
+    {{ form }}
+    <!-- {% for field in form %}
         <label >{{ field.label_tag }}</label>
         {{ field }}
-    {% endfor %}
+    {% endfor %} -->
     <input type="submit" value="register">
 </form>

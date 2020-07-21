@@ -29,3 +29,9 @@ class SignupForm(UserCreationForm):
 #             user.save()
 #         return user
 
+class AuthenticationForm(forms.ModelForm):
+    
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'password')
+

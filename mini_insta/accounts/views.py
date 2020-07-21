@@ -17,7 +17,8 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 
 from django.core.mail import EmailMessage
-from .tokens import activation_token
+from .tokens import account_activation_token
+from django.core.mail import send_mail
 
 from django.contrib.auth.models import User
 
@@ -26,46 +27,47 @@ from django.contrib import messages
 def signup(request):
     User = get_user_model()
     if request.method == 'POST':
+        print('method post')
         form = SignupForm(request.POST)
+        # print(form.errors.as_data())
         if form.is_valid():
-            email = form.cleaned_date.get('email')
-            if form.cleaned_date.get(email__iexact=email).count() == 1:
-                user = form.save(commit=False)
-                user.is_active = False
-                user.save()
-                current_site = get_current_site(request)
-                mail_subject = 'Activate your account.'
-                message = render_to_string('email_tmplate.html', {
-                    'user': user,
-                    'domain': current_site.domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                    'token': account_activation_token.make_token(user),
-                })
-                to_email = form.cleaned_data.get('email')
-                send_mail(mail_subject, message, 'lewy12345678910@gmail.com', [to_email])
-                return HttpResponse('Please confirm your email addres')
-
+            print('form is valid')
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your account.'
+            message = render_to_string('accounts/email_template.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            to_email = form.cleaned_data.get('email')
+            send_mail(mail_subject, message, 'lewy12345678910@gmail.com', [to_email])
+            return HttpResponse('Please confirm your email address to complete the registration')
     else:
-        form = forms.SignupForm()
+        form = SignupForm()
     return render(request, 'accounts/regform.html', {'form': form})
+
 
 def activate(request, uidb64, token):
     User = get_user_model()
     try:
-        uid = force_text(urlsafe_base64_decode(uid64))
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    if user is not None and account_activation_token(user, token):
+    if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return HttpResponse('Your email is confirm. Now you can log in')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
-        return HttpResponse('This link is invalid!')
+        return HttpResponse('Activation link is invalid!')
 
-from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
 
+
+from .forms import AuthenticationForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -86,5 +88,18 @@ def login_view(request):
 
     return render(request, 'accounts/login.html', {'form':form})
 
-# for changing password
-# update_session_auth_hash(request, form.user)
+from django.contrib.auth import authenticate, login
+
+# def my_view(request):
+#     if requ
+#     username = request.POST['username']
+#     password = request.POST['password']
+#     user = authenticate(request, username=username, password=password)
+#     if user is not None:
+#         login(request, user)
+#         return redirect('home')
+
+#     else:
+#         messages.error(request, 'user name or password is incorect')
+
+#     return render(request, 'accountd/login.html', {})

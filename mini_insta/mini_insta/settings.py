@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-    'accounts',
+    'accounts.apps.AccountsConfig',
     'groups',
     'posts',
     'my_site',
@@ -141,8 +141,19 @@ LOGIN_URL = reverse_lazy('accounts:login')
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# EMAIL_HOST = 'localhost'
+# EMAIL_HOST_USER = 'lewy12345678910@gmail.com'
+# EMAIL_HOST_PASSWORD = 'thatsmyLG3+Bitch'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
+
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_HOST_PASSWORD = ''  
+EMAIL_HOST_USER = 'lewy12345678910@gmail.com'  
+EMAIL_PORT = 587  
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'youremail@gmail.com'
-EMAIL_HOST_PASSWORD = 'yourpassword'
-EMAIL_PORT = 587
