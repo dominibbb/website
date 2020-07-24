@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="change" name="change_email">
+</form>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+<div class="container jumbotron">
+    {{ user.username }}
+    {{ user.email }}
+    <img src="{{ object.image.url }}" alt="">
+</div>
+
+{% endblock %}

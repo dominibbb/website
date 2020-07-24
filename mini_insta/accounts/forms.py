@@ -10,6 +10,12 @@ class SignupForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
+class ChangeEmailForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['email']
+
 # class UserCreationForm(forms.ModelForm):
 #     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
 #     password2 = forms.CharField(label='Repeat Password', widget=forms.PasswordInput)
