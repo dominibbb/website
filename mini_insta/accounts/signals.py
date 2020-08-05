@@ -10,9 +10,9 @@ def create_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
         print('profile created')
 
-@receiver(post_save, sender=User)
-def update_profile(sender, instance, created, **kwargs):
+# @receiver(post_save, sender=User)
+# def update_profile(sender, instance, created, **kwargs):
     
-    if created == False:
-        instance.profile.save()
-        print('profile updated')
+#     if created == False:
+#         instance.profile.save()
+#         print('profile updated')

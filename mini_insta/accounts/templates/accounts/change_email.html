@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block conntent %}
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="email" name="new_email">
+    <input type="submit" value="change email" name="change_email">
+</form>
+
+{% endblock %}

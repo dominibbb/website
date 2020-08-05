@@ -19,7 +19,7 @@ class Post(models.Model):
         return reverse('posts:detail', kwargs={'pk': self.pk})
 
     def __str__(self):
-        return 'Author of post %s' % (self.author)
+        return f'Author of post {self.author}'
 
 class Like(models.Model):
     post = models.ForeignKey(Post, related_name='like', on_delete=models.CASCADE)
@@ -36,6 +36,6 @@ class Comment(models.Model):
         ordering = ['date_of_created']
 
     def __str__(self):
-        return 'Comment %s by %s' % (self.body, self.comment_author)
+        return f'Comment {self.body} by {self.comment_author}'
 
 
