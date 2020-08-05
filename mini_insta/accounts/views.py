@@ -7,7 +7,7 @@ from . import forms
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
-from .forms import SignupForm, ChangeEmailForm
+from .forms import SignupForm
 
 
 
@@ -22,8 +22,51 @@ from .tokens import account_activation_token, email_activation_token
 from django.core.mail import send_mail
 
 from django.contrib.auth.models import User
+from .models import EmailChangeAuth
 
 from django.contrib import messages
+
+@login_required
+def emial_change(request):
+    User = get_user_model()
+    if 'change_email' in request.POST:
+        new_email = request.POST.get('new_email')
+        user = request.user
+        EmailChangeAuth.objects.create(user=user, new_email=new_email)
+
+        mail_subject = 'Confirm new email'
+        current_site = get_current_site(request)
+        message = render_to_string('accounts/email_template_change_email.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': email_activation_token.make_token(user)
+        })
+        send_mail(mail_subject, message, 'dev.django.git@gmail.com', [new_email])
+        return HttpResponse('Check your email and confirm your new email address')
+    
+    context = {
+
+    }
+
+    return render(request, 'accounts/change_email.html', context)
+
+
+def new_email_activate(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and email_activation_token.check_token(user, token):
+        email_change = EmailChangeAuth.objects.get(user=user)
+        email_change.save_changes()
+        email_change.delete()
+        return HttpResponse('Thank you for your email confirmation. Your email is change')
+    else:
+        return HttpResponse('Activation link is invalid!')
+    
 
 def signup(request):
     User = get_user_model()
@@ -50,41 +93,6 @@ def signup(request):
     return render(request, 'accounts/regform.html', {'form': form})
 
 
-
-
-@login_required
-def email_change(request, pk):
-    if request.method == 'POST':
-        form = ChangeEmailForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            current_site = get_current_site(request)
-            mail_subject = 'Confirm your email address'
-
-            message = render_to_string('accounts/email_temp_chang_addr.html', {
-                'user': request.user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(pk)),
-                'token': email_activation_token.make_token(request.user),
-            })
-            send_mail(mail_subject, message, 'dev.djang.git@gmail.com', [email])
-            return HttpResponse('Please confirm your new email')
-
-    else:
-        form = ChangeEmailForm()
-
-    return render(request, 'accounts/edit_email.html', {'form': form})
-
-def activate_new_email(request, uid64, token):
-    User = get_user_model()
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User._default_manager.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    
-    if user is not None and account_activation_token.check_token(user, token):
-        user.email
         
 
 def activate(request, uidb64, token):

@@ -15,7 +15,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name="logout"),
     path('profile/<int:pk>/', views.ProfileView.as_view(), name="profile"),
     path('update/<int:pk>/', views.ProfileUpdateView.as_view(), name='update'),
-    path('email_change/<int:pk>/', views.email_change, name="email_change"),
+    path('email_change/', views.emial_change, name='email_change'),
+    path('new_emial_activate/<uidb64>/<token>/', views.new_email_activate, name='new_email_activate'),
 
 
     path('reset_password/',
