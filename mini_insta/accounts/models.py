@@ -19,3 +19,16 @@ class Profile(models.Model):
            img.thumbnail(output_size)
            img.save(self.image.path)
 
+class EmailChangeAuth(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_change')
+    new_email = models.EmailField(max_length=125)
+
+    def __str__(self):
+        return f'User {self.user.username} email is {self.new_email}'
+
+    def save_changes(self, *args, **kwargs):
+        user = User.objects.get(username=self.user)
+        user.email = self.new_email
+    
+
+        
